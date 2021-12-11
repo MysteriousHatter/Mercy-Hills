@@ -23,7 +23,6 @@ public class Day1Animations : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        ResetAnimation = reset();
         animText = GetComponent<Animator>();
     }
 
@@ -57,25 +56,7 @@ public class Day1Animations : MonoBehaviour
     }
 
 
-    IEnumerator reset()
-    {
-        //turnOnPower();
-        timer = 2f;
-        //timer to reset animation status
-
-        while (timer > 0f)
-        {
-            timer -= Time.deltaTime;
-            yield return null;
-
-        }
-
-        Debug.Log("Test");
-        animText.SetBool("check", false);
-        timer = 2f;
-        yield break;
-
-    }
+    
 
 
 

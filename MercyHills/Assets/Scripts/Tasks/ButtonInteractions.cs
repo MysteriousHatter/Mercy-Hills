@@ -22,10 +22,46 @@ public class ButtonInteractions : MonoBehaviour
     public int taskNum;
     public int dayNum;
 
+    //When Player is close to an item
+    private Controller player;
+    float objStoppingDistance = 4f;
+    [SerializeField] private Light fadingLight;
+    [SerializeField] private float defaultIntensity = 4f;
+
+    private void Start()
+    {
+        player = FindObjectOfType<Controller>();
+        if (fadingLight != null)
+        {
+            fadingLight.intensity = defaultIntensity;
+        }
+
+}
+
     void Update()
     {
         //Setting distance variable to the distance from the target in the RayCasting script
         distance = RayCasting.distance;
+
+        if (fadingLight != null)
+        {
+            float distanceToObject = Vector3.Distance(player.transform.position, this.transform.position);
+            if (distanceToObject <= objStoppingDistance)
+            {
+                fadingLight.intensity -= 0.5f;
+            }
+            else if (distanceToObject >= objStoppingDistance)
+            { 
+                if (fadingLight.intensity >= defaultIntensity)
+                {
+                    return;
+                }
+                else
+                {
+                    fadingLight.intensity += 0.5f;
+                }
+            }
+        }
 
     }
 

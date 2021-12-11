@@ -7,11 +7,13 @@ public class WaitOnWaypoint : IState
     private readonly Monster _monster;
     private float _nextIdleWaitTIme;
     private const float _WaitPerSecond = 8f;
+    private readonly Animator _animator;
 
 
-    public WaitOnWaypoint(Monster monster)
+    public WaitOnWaypoint(Monster monster,Animator animator)
     {
         _monster = monster;
+        _animator = animator;
     }
 
 

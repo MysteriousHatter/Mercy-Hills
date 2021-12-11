@@ -11,23 +11,24 @@ public class Tasks : MonoBehaviour
     public locationTrigger task1a, task3, task6a1, task6a2, task6a3, task6a4, task6a5, task6a6, task6a7, task6a8;   //This references the locationTrigger class and creating objects of the class
     public ButtonInteractions task4, task5a, task5b, task6b1, task6b2, task6b3, task6b4, task7;    //This references the ButtonInteractions class and creating objects of the class
 
-    public Item day2Tasks0, day2tasks9, day2tasks11, day2tasks14, day2tasks15;   //This references the Item class and creating objects of the class
-    public locationTrigger day2Task3, day2tasks5, day2tasks8, day2tasks17; //This references the locationTrigger class and creating objects of the class
-    public ButtonInteractions day2Tasks1, day2Task2, day2tasks4, day2tasks6, day2tasks7, day2tasks10, day2tasks12, day2tasks13, day2tasks16, day2tasks18, day2tasks19,
-    day2tasks20, day2tasks21, day2tasks22, day2tasks23; //ences the ButtonInteractions class and creating objects of the class
+    public Item day2Task6b, day2Task8;  //This references the Item class and creating objects of the class
+    public locationTrigger day2Task2a, day2Task3, day2Task6a; //This references the locationTrigger class and creating objects of the class
+    public ButtonInteractions day2Task0, day2Task1, day2Task2b, day2Task4, day2Task5, day2Task7a, day2Task7b, day2Task9,
+        day2Task10, day2Task11, day2Task12, day2Task13a, day2Task13b, day2Task13c, day2Task13d, day2Task14;  //references the ButtonInteractions class and creating objects of the class
 
-
-    public float timer = 3f;
-
-    IEnumerator generatorFunction;
   
-    public bool screwDriver = false;
-    public bool powerBox = false;
-    public int wire = 0;
 
     public DayAnimations tasksFade;
     public TaskList taskList;
     public Status status;
+    private Win_Cutscene_Activation activateWin;
+    public Lighting lighting;
+
+    [SerializeField] private List<Light> glintZones;
+    int counter;
+
+    //Dummy Variable
+    public GameObject winCutscene;
 
     //This function keeps track of what task the player is currently on. Completed
     //Need to add a coroutine to switch the tasks
@@ -36,11 +37,242 @@ public class Tasks : MonoBehaviour
 
     private void Start()
     {
-        generatorFunction = generatorTimer();
+        activateWin = FindObjectOfType<Win_Cutscene_Activation>();
+        glintZones = TurnOFFGlintAreas(glintZones);
+        counter = 0;
+        glintZones[counter].GetComponent("Halo");
+        glintZones[counter].enabled = true;
+
 
     }
 
-    
+    private List<Light> TurnOFFGlintAreas(List<Light> zones)
+    {
+        List<Light> placeholder = zones;
+        foreach(Behaviour c in zones)
+        {
+            c.enabled = false;
+        }
+        return placeholder;
+
+    }
+
+    public void day2Tasks(int taskNum)
+    {
+        switch (taskNum)
+        {
+            case -2:
+                Debug.Log("Shower activation before and after the task");
+
+                status.resetStatus();
+                break;
+
+            case -1:
+                Debug.Log("Dummy Variable doing nothing");
+                lighting.check = true;
+                break;
+
+            case 0:
+                Debug.Log("Task day2Task1 complete"); //(button obj) 
+                day2Task2a.check = true;
+                glintZones[counter].enabled = false;
+                tasksFade.playAnimation();
+                taskList.setString("Head to the Electrical Room!");
+                lighting.turnOff();
+                lighting.generatorOn = true;
+                GameManager.Instance.lightsOff = true;
+                day2Task1.turnOff();
+                break;
+
+
+            case 1:
+                Debug.Log("Task day2Task2a complete"); //(area obj)
+                glintZones[counter].enabled = false;
+                day2Task2b.check = true;
+                tasksFade.playAnimation();
+                taskList.setString("Turn on the Generator. It should stay on?");
+                counter++;
+                glintZones[counter].enabled = true;
+                break;
+
+            case 2:
+                Debug.Log("Task day2Task2b complete"); //(button obj)
+                glintZones[counter].enabled = false;
+                day2Task3.check = true;
+                lighting.check = true;
+                lighting.generatorOn = true;
+                GameManager.Instance.lightsOff = false;
+                day2Task2b.taskNum = -1;
+                tasksFade.playAnimation();
+                status.virusLeak = true; //virus bar still running during cutscene here
+                taskList.setString("Virus Leak! Find the Security Room.");
+                break;
+            case 3:
+                Debug.Log("Task day2Task3 complete"); //(area obj) 
+                glintZones[counter].enabled = false;
+                day2Task4.check = true;
+                status.virusLeak = false; 
+                tasksFade.playAnimation();
+                taskList.setString("Use the computer to lock down the Virus");
+                counter++;
+                glintZones[counter].enabled = true;
+                day2Task4.turnOn();
+                break;
+            case 4:
+                Debug.Log("Task day2Task4 complete"); //(button obj) 
+                glintZones[counter].enabled = false;
+                day2Task5.check = true;
+                tasksFade.playAnimation();
+                taskList.setString("Restart the Virus Chamber");
+                counter++;
+                glintZones[counter].enabled = true;
+                day2Task4.turnOff();
+                day2Task5.turnOn();
+                break;
+            case 5:
+                Debug.Log("Task day2Task5 complete"); //(button obj) 
+                glintZones[counter].enabled = false;
+                day2Task6a.check = true;
+                tasksFade.playAnimation();
+                taskList.setString("Go to Lab 1");
+                counter++;
+                glintZones[counter].enabled = true;
+                day2Task5.turnOff();
+                break;
+            case 6:
+                Debug.Log("Task day2Task6a complete"); //(area obj)
+                day2Task6b.check = true;
+                tasksFade.playAnimation();
+                taskList.setString("Grab the RNA strand jar");
+                break;
+            case 7:
+                Debug.Log("Task day2Task6b complete");  //(item obj)
+                glintZones[counter].enabled = false;
+                day2Task7a.check = true;
+                tasksFade.playAnimation();
+                taskList.setString("Put the RNA strand into the Virus Chamber");
+                counter++;
+                glintZones[counter].enabled = true;
+                day2Task7a.turnOn();
+
+                break;
+            case 8:
+                Debug.Log("Task day2Task7a complete"); //(button obj) 
+                glintZones[counter].enabled = false;
+                day2Task7b.check = true;
+                tasksFade.playAnimation();
+                taskList.setString("Activate the Chamber");
+                counter++;
+                glintZones[counter].enabled = true;
+                day2Task7a.turnOff();
+                day2Task7b.turnOn();
+                break;
+            case 9:
+                Debug.Log("Task day2Task7b complete"); //(button item) 
+                glintZones[counter].enabled = false;
+                day2Task8.check = true;
+                tasksFade.playAnimation();
+                taskList.setString("Find a empty Syringe");
+                counter++;
+                glintZones[counter].enabled = true;
+                day2Task7b.turnOff();
+                break;
+            case 10:
+                Debug.Log("Task day2Task8 complete");  //(item obj)
+                glintZones[counter].enabled = false;
+                day2Task9.check = true;
+                tasksFade.playAnimation();
+                taskList.setString("Fill Syringe with Virus at the Chamber");
+                counter++;
+                glintZones[counter].enabled = true;
+                day2Task9.turnOn();
+                break;
+            case 11:
+                Debug.Log("Task day2Task9 complete"); //(button obj) 
+                glintZones[counter].enabled = false;
+                day2Task10.check = true;
+                tasksFade.playAnimation();
+                //if(GameManager.Instance.restart.played += Restart_played)
+                status.virusLeak = true; //virus bar still running during cutscene here
+                taskList.setString("Lab Leak! Lock down the Virus!");
+                counter++;
+                glintZones[counter].enabled = true;
+                day2Task9.turnOff();
+                day2Task10.turnOn();
+                break;
+            case 12:
+                Debug.Log("Task day2Task11 complete"); //(button obj) 
+                glintZones[counter].enabled = false;
+                day2Task11.check = true;
+                status.virusLeak = false;
+                tasksFade.playAnimation();
+                taskList.setString("Activate Chamber to Mass Produce Vaccines");
+                counter++;
+                glintZones[counter].enabled = true;
+                day2Task10.turnOff();
+                day2Task11.turnOn();
+                break;
+            case 13:
+                Debug.Log("Task day2Task12 complete"); //(button obj) 
+                glintZones[counter].enabled = false;
+                day2Task12.check = true;
+                tasksFade.playAnimation();
+                taskList.setString("Put the vaccine in the shipping box in Electrical");
+                counter++;
+                glintZones[counter].enabled = true;
+                day2Task11.turnOff();
+                day2Task12.turnOn();
+                break;
+            case 14:
+                Debug.Log("Task day2Task13 complete"); //(button obj) 
+                glintZones[counter].enabled = false;
+                day2Task13a.taskNum = 15;
+                day2Task13b.taskNum = 15;
+                day2Task13c.taskNum = 15;
+                day2Task13d.taskNum = 15;
+                tasksFade.playAnimation();
+                taskList.setString("Wash the Virus off using the shower");
+                counter++;
+                glintZones[counter].enabled = true;
+                glintZones[counter + 1].enabled = true;
+                glintZones[counter + 2].enabled = true;
+                glintZones[counter + 3].enabled = true;
+                day2Task12.turnOff();
+                break;
+            case 15:
+                Debug.Log("Task day2Task14 complete"); //(button obj) 
+                glintZones[counter].enabled = false;
+                glintZones[counter + 1].enabled = false;
+                glintZones[counter + 2].enabled = false;
+                glintZones[counter + 3].enabled = false;
+                day2Task14.check = true;
+                day2Task13a.taskNum = -2;
+                day2Task13b.taskNum = -2;
+                day2Task13c.taskNum = -2;
+                day2Task13d.taskNum = -2;
+                status.resetStatus();
+                tasksFade.playAnimation();
+                taskList.setString("You feel extremely exhausted, get some sleep");
+                break;
+            case 16:
+                Debug.Log("Task day2Task15 complete"); // Activate bed to end/win the game.
+                //tasksFade.playAnimation();
+                //taskList.setString("");
+                activateWin.EnableCutscene();
+                winCutscene.SetActive(true);
+                GameManager.Instance.numOfDeaths = 0;
+                GameManager.Instance.lightsOff = false;
+                day2Task14.turnOff();
+                break;
+
+
+        }
+    }
+
+    //private void Restart_played(UnityEngine.Playables.PlayableDirector obj)
+    //{
+    //    throw new NotImplementedException();
+    //}
 
     public void day1Tasks(int taskNum)
     {
@@ -52,13 +284,13 @@ public class Tasks : MonoBehaviour
                 status.resetStatus();
                 break;
             case -1:
-                Debug.Log("Dummy Variable doing nothing");
+                Debug.Log("Generator");
                 break;
             case 0:
                 Debug.Log("Picked up task list"); // item tasks
                 task1a.check = true;
                 tasksFade.playAnimation();
-                taskList.setString("Find the Lab 2");
+                taskList.setString("Find Lab 2");
                 break;
             case 1:
                 Debug.Log("Task 1a complete");
@@ -79,7 +311,7 @@ public class Tasks : MonoBehaviour
                 taskList.setString("Find the Lab 3");
                 break;
             case 4:
-                Debug.Log("Task 3 completed"); 
+                Debug.Log("Task 3 completed");
                 task4.check = true;
                 tasksFade.playAnimation();
                 taskList.setString("Release the Virus into the Virus Chamber");
@@ -143,11 +375,11 @@ public class Tasks : MonoBehaviour
                 taskList.setString("Wash the Virus off using the shower");
                 break;
             case 9:
-                Debug.Log("Task 6b complete");
+                Debug.Log("Task 6b complete"); //write code to reduce virus (case -2)
                 task7.check = true;
                 tasksFade.playAnimation();
                 taskList.setString("Go to sleep. It's late");
-
+                status.resetStatus();
                 task6b1.taskNum = -2;
                 task6b2.taskNum = -2;
                 task6b3.taskNum = -2;
@@ -156,227 +388,11 @@ public class Tasks : MonoBehaviour
                 break;
             case 10:
                 Debug.Log("Task 7 complete");  //cutscene to sleep and switch scenes or end it
-                task7.check = true;
+                                               //task7.check = true;
+                //activateWin.EnableCutscene();
                 task7.taskNum = -1;
                 break;
 
         }
     }
-
-    public void day2Tasks(int taskNum)
-    {
-        switch (taskNum)
-        {
-            case -1: //dummy variable with buttons
-                Debug.Log("Dummy Variable doing nothing");
-                break;
-           
-            case 0:
-                Debug.Log("Picked up task day 2 list "); // item tasks
-
-                day2Tasks1.check = true; 
-
-                //StartCoroutine(generatorFunction);
-
-                break;
-
-            case 1:
-                Debug.Log("activate 2nd phase of virus chamber");
-                day2Task2.check = true; 
-                //day2Tasks1.taskNum = -1; //since its a button we have to do this dummy var
-                //so sadly the consol doesn't pick this case up
-                //activate the second phase of the virus chamber
-                //this'll be a button object
-                break;
-            case 2:
-                Debug.Log("you made it to the room!");
-                day2Task3.check = true;
-                //area object because you need to head to the electric room
-                //button object to turn on the generator 
-                //this provokes the alarm to go off
-                break;
-               
-
-            case 3:
-                Debug.Log("turn on generator!");
-                day2tasks4.check = true;
-                //day2Task3.taskNum = -1;
-                
-                break;
-            case 4:
-                Debug.Log("Find the security room!");
-                day2tasks5.check = true;
-                //day2tasks4.taskNum = -1;
-                //area object
-                break;
-            case 5:
-                Debug.Log("Push the red button!");
-                day2tasks6.check = true;
-                //oddly enough it says task 5 was triggered...
-                //day2tasks5.taskNum = -1;
-                break;
-            case 6:
-                Debug.Log("Restart the chamber mechanism");
-                day2tasks7.check = true;
-                //day2tasks6.taskNum = -1;
-                break;
-            case 7:
-                Debug.Log("Go to the chemical lab!!!!");
-                day2tasks8.check = true;
-                //button obj to place rna strand into the virus chamber
-                //maybe later figure out a way for the character to carry an object and place it
-                //this is the hard if else statements. if player doens't fix power and used generator need to continue to step 8
-                //else skip to task 10
-                break;
-            case 8:
-                Debug.Log("Grab the RNA strand jar");
-                day2tasks9.check = true;
-                //item object to find the card key quickly thats in the room
-                break;
-            case 9:
-                Debug.Log("Put strand in virus chamber");
-                day2tasks10.check = true;
-                
-                break;
-
-            case 10:
-                Debug.Log("Find the card key!");
-                day2tasks11.check = true;
-                break;
-
-            case 11:
-                Debug.Log("Fix the power!"); //button obj
-                //however will probably need to do an if else statement
-                
-                day2tasks12.check = true;
-                break;
-            case 12:
-                Debug.Log("Put RNA strand into the virus chamber to activate the mechanism!");
-                day2tasks13.check = true;
-                break;
-
-            case 13:
-                Debug.Log("Find the syringe!");
-                day2tasks14.check = true;
-                break;
-
-            case 14:
-                Debug.Log("Return to the testing lab and get a syringe full of the vaccine"); //item
-                day2tasks15.check = true;
-                break;
-
-            case 15:
-                Debug.Log("Test the vaccine on the rat"); //button
-                day2tasks16.check = true;
-                break;
-
-            case 16:
-                Debug.Log("Lab Leak! Head to the Security Room "); //area
-                day2tasks17.check = true;
-                break;
-
-            case 17:
-                Debug.Log("Press the Red Button");
-                day2tasks18.check = true;
-                break;
-
-            case 18:
-                Debug.Log("Check on the rat");
-                day2tasks19.check = true;
-                break;
-
-            case 19:
-                Debug.Log("Press the green button on the virus chamber device to mass produce the vaccine");
-                day2tasks20.check = true;
-                break;
-            case 20:
-                Debug.Log("Go to the decontamination room and clean the virus off of you");
-                day2tasks21.check = true;
-                //button
-                break;
-
-            case 21:
-                Debug.Log("Drop off the completed vaccine in the drop off box in the decontamination room");
-                day2tasks22.check = true;
-                //button
-                break;
-
-            case 22:
-                Debug.Log("you feel extremely tired go to sleep");
-                day2tasks23.check = true;
-                //button
-                break;
-
-
-
-
-
-
-            case 99: //generator reset
-                Debug.Log("Dummy Variable doing nothing");
-                break;
-
-        }
-    }
-
-
-
-    IEnumerator generatorTimer()
-    {
-        turnOnPower();
-
-        timer = 15f; //timer for the generator before the power turns off
-        
-        while (timer > 0f)
-        {
-            timer -= Time.deltaTime;
-            yield return null;
-        }
-
-        Debug.Log("Timer complete");
-        Debug.Log("Turning off lights");
-
-        if(!screwDriver || wire < 3 || !powerBox)
-        {
-            turnOffPower();
-        }
-
-        //function or hard code the generator to be activated again.        
-    }
-
-
-    public void turnOnPower()
-    {
-        //turn on lights
-        //turn off area virus
-        //despawn additional enemies\
-        //We'll have to use properties within the game manager script to spawn the enemies
-        //if true- call MonsterSpawner
-        GameManager.Instance.lightsOff = false;
-
-
-    }
-
-    public void turnOffPower()
-    {
-        //turn of lights
-        //turn on area virus
-        //spawn additional enemies
-        //We'll have to use properties within the game manager script to spawn the enemies
-        //if false- Deactive MonsterSpawner
-        GameManager.Instance.lightsOff = true;
-    }
-
-
-
-
 }
-
-
-
-//StopCoroutine(generatorFunction);
-//timer = 15f;
-
-//StartCoroutine(generatorFunction);
-
-

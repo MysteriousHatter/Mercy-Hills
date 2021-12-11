@@ -8,27 +8,42 @@ public class AudioManager : MonoBehaviour
 
     public static AudioManager instance;
 
+
+
+    public static AudioManager Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = GameObject.FindObjectOfType<AudioManager>();
+            }
+
+            return instance;
+        }
+    }
     // Start is called before the first frame update
     private void Awake()
     {
-        if (instance == null) { instance = this; }
+        int numMusicPlayers = FindObjectsOfType<AudioManager>().Length;
+        if (numMusicPlayers > 1)
+        {
+            Destroy(gameObject);
+        }
         else
         {
             DontDestroyOnLoad(gameObject);
-            return;
         }
-
-
         foreach (Sound s in BackgroundSounds)
-        {
-            s.source = gameObject.AddComponent<AudioSource>();
-            s.source.clip = s.clip;
+            {
+                s.source = gameObject.AddComponent<AudioSource>();
+                s.source.clip = s.clip;
 
-            s.source.volume = s.volume;
-            s.source.pitch = s.pitch;
-            s.source.loop = s.loop;
+                s.source.volume = s.volume;
+                s.source.pitch = s.pitch;
+                s.source.loop = s.loop;
 
-        }
+            }
     }
 
     private void Start()
@@ -45,7 +60,7 @@ public class AudioManager : MonoBehaviour
             Debug.LogError("Sound: " + name + " not found");
             return;
         }
-        s.source.PlayOneShot(s.clip);
+        if (!s.source.isPlaying ) { s.source.Play(); }
     }
 
     public void Stop(string name)
@@ -56,6 +71,35 @@ public class AudioManager : MonoBehaviour
         if (s == null)
         {
             return;
+        }
+    }
+
+
+    //Note this implementation is very sloppy
+    public void setVolume(float vol)
+    {
+
+        //AudioListener.volume = vol;
+        BackgroundSounds[0].volume = vol;
+        BackgroundSounds[1].volume = vol;
+        BackgroundSounds[2].volume = vol;
+        BackgroundSounds[3].volume = vol;
+        BackgroundSounds[4].volume = vol;
+        BackgroundSounds[5].volume = vol;
+        ChangeInVolume();
+    }
+
+    private void ChangeInVolume()
+    {
+        foreach (Sound s in BackgroundSounds)
+        {
+            s.source.GetComponent<AudioSource>();
+            s.source.clip = s.clip;
+
+            s.source.volume = s.volume;
+            s.source.pitch = s.pitch;
+            s.source.loop = s.loop;
+
         }
     }
 }

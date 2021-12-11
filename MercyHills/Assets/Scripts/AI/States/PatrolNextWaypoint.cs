@@ -13,6 +13,7 @@ internal class PatrolNextWaypoint : IState
     private float PATROL_SPEED;
     private float PATROL_ANGULAR_SPEED;
     private float PATROL_ACCELERATION;
+    private readonly Animator _animator;
 
     private Vector3 _lastPosition = Vector3.zero;
 
@@ -20,7 +21,7 @@ internal class PatrolNextWaypoint : IState
     Status status;
 
 
-    public PatrolNextWaypoint(Monster monster, NavMeshAgent navMeshAgent, int currentIndex, float pSpeed, float pAngular, float pAcceleration, Status statusPatrol)
+    public PatrolNextWaypoint(Monster monster, NavMeshAgent navMeshAgent, int currentIndex, float pSpeed, float pAngular, float pAcceleration, Status statusPatrol, Animator animator)
     {
         _monster = monster;
         _navMeshAgent = navMeshAgent;
@@ -29,15 +30,19 @@ internal class PatrolNextWaypoint : IState
         PATROL_ANGULAR_SPEED = pAngular;
         PATROL_ACCELERATION = pAcceleration;
         status = statusPatrol;
+        _animator = animator;
     }
     public void OnEnter()
     {
         TimeStuck = 0f;
         _navMeshAgent.enabled = true;
-        _navMeshAgent.speed = status.getValue() >= 40? PATROL_SPEED * 2 : PATROL_SPEED;
-        _navMeshAgent.angularSpeed = status.getValue() >= 40 ? PATROL_ANGULAR_SPEED * 2 : PATROL_ANGULAR_SPEED;
-        _navMeshAgent.acceleration = status.getValue() >= 40 ? PATROL_ACCELERATION * 2 : PATROL_ACCELERATION;
+        _navMeshAgent.speed = GameManager.Instance.numOfDeaths >= 2 ? PATROL_SPEED * 2 : PATROL_SPEED;
+        _navMeshAgent.angularSpeed = GameManager.Instance.numOfDeaths >= 2 ? PATROL_ANGULAR_SPEED * 2 : PATROL_ANGULAR_SPEED;
+        _navMeshAgent.acceleration = GameManager.Instance.numOfDeaths >= 2 ? PATROL_ACCELERATION * 2 : PATROL_ACCELERATION;
         _navMeshAgent.SetDestination(_monster.waypoints[_monster.currentWaypointIndex].transform.position);
+        _animator.SetBool("Move", true);
+        _animator.SetBool("Chase", false);
+        _animator.SetBool("Attack", false);
 
     }
 

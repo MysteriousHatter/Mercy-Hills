@@ -5,12 +5,21 @@ using UnityEngine;
 public class Heard_Player : MonoBehaviour
 {
     [SerializeField] PlayerDetector heardPlayer;
+     private Controller playerSpeed;
 
+    private void Start()
+    {
+        playerSpeed = FindObjectOfType<Controller>();
+    }
     private void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.CompareTag("Player"))
         {
-            heardPlayer._detectedPlayer = other.gameObject.GetComponent<Controller>();
+            //Player is moving
+            if (playerSpeed.isMoving)
+            {
+                heardPlayer._detectedPlayer = other.gameObject.GetComponent<Controller>();
+            }
         }
     }
 }

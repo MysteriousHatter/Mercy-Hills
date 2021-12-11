@@ -5,9 +5,18 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-   public void PlayGame()
+    public bool hasPlayed = false;
+
+   public void PlayGameDemo()
     {
-        SceneManager.LoadScene("Tasks");
+        SceneManager.LoadScene("Loading_Scene");
+        hasPlayed = true;
+        FindObjectOfType<AudioManager>().gameObject.SetActive(true);
+    }
+
+    public void PlayGameFinal()
+    {
+        //SceneManager.LoadScene("Tasks");
     }
 
     public void QuitGame()

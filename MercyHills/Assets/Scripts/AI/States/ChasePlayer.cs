@@ -9,34 +9,37 @@ public class ChasePlayer : IState
     private readonly Monster _monster;
     private NavMeshAgent _navmeshAgent;
     private readonly PlayerDetector _playerDetector;
+    private readonly Animator _animator;
 
     private float _initialSpeed;
-    private float CHASE_SPEED;
-    private float ANGULAR_SPEED;
-    private float MON_ACCELERATE;
+    private float monSpeed;
+    private float monAngular;
+    private float monAccelerate;
     private float distanceToPlayer;
+
 
     Status status;
 
 
-    public ChasePlayer(Monster monster, NavMeshAgent navMeshAgent, PlayerDetector playerDetector, float Monspeed, float MonAngular, float MonAccelerate, Status patrolSpeed)
+    public ChasePlayer(Monster monster, NavMeshAgent navMeshAgent, PlayerDetector playerDetector, float monSpeed, float monAngular, float monAccelerate, Status patrolSpeed, Animator animator)
     {
         _monster = monster;
         _navmeshAgent = navMeshAgent;
         _playerDetector = playerDetector;
-        CHASE_SPEED = Monspeed;
-        ANGULAR_SPEED = MonAngular;
-        MON_ACCELERATE = MonAccelerate;
+        this.monSpeed = monSpeed;
+        this.monAngular = monAngular;
+        this.monAccelerate = monAccelerate;
         status = patrolSpeed;
+        _animator = animator;
 
     }
     public void OnEnter()
     {
         _navmeshAgent.enabled = true;
         _initialSpeed = _navmeshAgent.speed;
-        _navmeshAgent.speed = status.getValue() >= 40? CHASE_SPEED * 2: CHASE_SPEED;
-        _navmeshAgent.angularSpeed = status.getValue() >= 40 ? ANGULAR_SPEED * 2: ANGULAR_SPEED;
-        _navmeshAgent.acceleration = status.getValue() >= 40 ? MON_ACCELERATE * 2 : MON_ACCELERATE;
+        _navmeshAgent.speed = GameManager.Instance.numOfDeaths >= 2? monSpeed * 2: monSpeed;
+        _navmeshAgent.angularSpeed = GameManager.Instance.numOfDeaths >= 2? monAngular * 2: monAngular;
+        _navmeshAgent.acceleration = GameManager.Instance.numOfDeaths >= 2? monAccelerate * 2 : monAccelerate;
     }
     public void Tick()
     {
@@ -52,11 +55,17 @@ public class ChasePlayer : IState
         if(distanceToPlayer >= _navmeshAgent.stoppingDistance)
         {
             _navmeshAgent.SetDestination(_playerDetector._detectedPlayer.transform.position);
+            _animator.SetBool("Chase", true);
+            _animator.SetBool("Move", false);
+            _animator.SetBool("Attack", false);
         }
         else if(distanceToPlayer <= _navmeshAgent.stoppingDistance)
         {
             Debug.Log("Attack Player");
-            status.deaths += 1; //This works but I will try another method with an animation event 
+            _animator.SetBool("Chase", false);
+            _animator.SetBool("Attack", true);
+            GameManager.Instance.Caught.gameObject.SetActive(true);
+            GameManager.Instance.enemyChecker = false;
         }
     }
 

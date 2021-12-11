@@ -33,15 +33,19 @@ public class Controller : MonoBehaviour
     Vector3 playerCrouch = new Vector3(1.5f, 1.0f, 1.5f);
     Vector3 playerStand = new Vector3(1.5f, 1.5f, 1.5f);
 
+    public AudioSource source;
+    [SerializeField] public bool isMoving;
+
     //public bool inBox = false;
     //public bool movementCheck = false;
 
 
-    //private void Start()
-    //{
-    //    StartCoroutine(TrackPlayer());
-    //    Cursor.visible = false;
-    //}
+    private void Start()
+    {
+        source = GetComponent<AudioSource>();
+       // StartCoroutine(TrackPlayer());
+        //Cursor.visible = false;
+    }
 
     //IEnumerator TrackPlayer()
     //{
@@ -126,6 +130,22 @@ public class Controller : MonoBehaviour
         //}
 
         controller.Move(move * moveSpeed * Time.deltaTime);
+        if(controller.velocity.x != 0)
+        {
+            isMoving = true;
+        }
+        else
+        {
+            isMoving = false;
+        }
+        if(isMoving)
+        {
+            //source.Play();
+        }
+        else
+        {
+            //source.Stop();
+        }
 
         velocity.y += gravity * Time.deltaTime;
 

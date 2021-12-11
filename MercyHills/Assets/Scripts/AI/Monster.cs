@@ -19,6 +19,7 @@ public class Monster : MonoBehaviour
     [SerializeField] private float _enemyDistance;
     private NavMeshAgent navMeshAgent;
     Status status;
+    private Animator animator;
 
     [Tooltip("Values Relating to Patroling")]
     [Header("Patrol Speeds")]
@@ -38,12 +39,14 @@ public class Monster : MonoBehaviour
     [SerializeField] float stunnedCounter = 0;
     [SerializeField] public bool isNotStun = false;
 
+
     private void Awake()
     {
         monsterSpawner = FindObjectOfType<MonsterSpawner>();
         pathConfig = monsterSpawner.GetCurrentWave();
         navMeshAgent = GetComponent<NavMeshAgent>();
         var playerDetector = gameObject.GetComponentInChildren<PlayerDetector>();
+        animator = GetComponent<Animator>();
         waypoints = pathConfig.GetWaypoints();
         status = FindObjectOfType<Status>();
 
@@ -51,9 +54,9 @@ public class Monster : MonoBehaviour
         _stateMachine = new StateMachine();
 
         var SearchForWaypoint = new NextWaypoint(this, reverse, navMeshAgent);
-        var moveToSelected = new PatrolNextWaypoint(this, navMeshAgent, currentWaypointIndex, PatrolSpeed, PatrolAngularSpeed, PatrolAccelerate, status);
-        var Idle = new WaitOnWaypoint(this);
-        var chase = new ChasePlayer(this, navMeshAgent, playerDetector, chaseSpeed, AngularSpeed, eneAccelerate, status);
+        var moveToSelected = new PatrolNextWaypoint(this, navMeshAgent, currentWaypointIndex, PatrolSpeed, PatrolAngularSpeed, PatrolAccelerate, status, animator);
+        var Idle = new WaitOnWaypoint(this, animator);
+        var chase = new ChasePlayer(this, navMeshAgent, playerDetector, chaseSpeed, AngularSpeed, eneAccelerate, status, animator);
         var stun = new StunnedMode(this, navMeshAgent, stunnedCounter);
 
 
@@ -99,7 +102,9 @@ public class Monster : MonoBehaviour
         navMeshAgent.angularSpeed = 0f;
         navMeshAgent.acceleration = 0f;
         canMove = false;
+        animator.SetBool("Move", canMove);
         yield return new WaitForSeconds(_ExpectedWaitTime);
+        animator.SetBool("Move", canMove);
         canMove = true;
         navMeshAgent.speed = PatrolSpeed;
         navMeshAgent.angularSpeed = PatrolAngularSpeed;

@@ -14,11 +14,11 @@ TagManager:
   - Water
   - UI
   - Player
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Walls
+  - Post-Processing
+  - Map
+  - Enemy
+  - Ceiling
   - 
   - 
   - 

@@ -1,5 +1,71 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &21578586
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 21578589}
+  - component: {fileID: 21578588}
+  - component: {fileID: 21578587}
+  m_Layer: 0
+  m_Name: EventSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &21578589
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 21578586}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5669017748242337716}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &21578588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 21578586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_FirstSelected: {fileID: 0}
+  m_sendNavigationEvents: 1
+  m_DragThreshold: 10
+--- !u!114 &21578587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 21578586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalAxis: Horizontal
+  m_VerticalAxis: Vertical
+  m_SubmitButton: Submit
+  m_CancelButton: Cancel
+  m_InputActionsPerSecond: 10
+  m_RepeatDelay: 0.5
+  m_ForceModuleActive: 0
 --- !u!1 &5669017747415413105
 GameObject:
   m_ObjectHideFlags: 0
@@ -342,7 +408,7 @@ Transform:
   - {fileID: 5669017749265964398}
   - {fileID: 5669017747993151024}
   m_Father: {fileID: 5669017748242337716}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!320 &5669017747853979484
 PlayableDirector:
@@ -379,15 +445,22 @@ PlayableDirector:
     value: {fileID: 5669017749364433408}
   - key: {fileID: 7451032316983777062, guid: 15c6ea819d4a69f4ebc1145d1b1fa3fb, type: 2}
     value: {fileID: 5669017747853979486}
+  - key: {fileID: 6027296629795023997, guid: 15c6ea819d4a69f4ebc1145d1b1fa3fb, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: 34580705641442195, guid: 15c6ea819d4a69f4ebc1145d1b1fa3fb, type: 2}
+    value: {fileID: 0}
   m_ExposedReferences:
     m_References:
     - 780080e880361df4e8ba62626a9849ff: {fileID: 5669017747822752723}
     - 8cdea401ce3d1294fae9c6047562c559: {fileID: 5669017748098097695}
+    - 9e01a3cc9668ac94ba76d251df05d98f: {fileID: 0}
     - 2766c461077359343ab5250ce7c6c6d4: {fileID: 5669017748552485940}
+    - 20944784f7698414c9da907ea7112332: {fileID: 5669017748669221456}
     - 68d8353816d917b438eb89135d6e548b: {fileID: 5669017748183012322}
     - 9b095be92f74e6d419a1563b42c923af: {fileID: 0}
     - 585e3257902fd8244a58138758543bba: {fileID: 5669017747822752723}
     - 3f8c78a700a53b54898c1808e991a8ff: {fileID: 5669017748669221456}
+    - 4708ccecefc87804491109c38c22182e: {fileID: 0}
     - f22f7a00deba2dc42afef6e9b7f2a205: {fileID: 5669017748552485940}
 --- !u!1 &5669017747993151027
 GameObject:
@@ -690,6 +763,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 21578589}
   - {fileID: 5669017747853979487}
   m_Father: {fileID: 0}
   m_RootOrder: 0

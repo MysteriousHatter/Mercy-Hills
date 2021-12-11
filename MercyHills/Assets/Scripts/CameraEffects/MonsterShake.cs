@@ -15,6 +15,8 @@ public class MonsterShake : MonoBehaviour
     Status status;
 
 
+
+
     private void Awake()
     {
         cinemachineVirtualCamera = GetComponent<CinemachineVirtualCamera>();
@@ -42,7 +44,7 @@ public class MonsterShake : MonoBehaviour
 
         float usualIntensity = 0;
 
-        cinemachineBasicMultiChannelPerlin.m_AmplitudeGain = status.getValue() >= 80 ? usualIntensity = 4.5f : usualIntensity = 0;
+        cinemachineBasicMultiChannelPerlin.m_AmplitudeGain = GameManager.Instance.numOfDeaths >= 4 && GameManager.Instance.lightsOff ? usualIntensity = 3f : usualIntensity = 0;
     }
 
     public void PlayerNotSeen()

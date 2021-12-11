@@ -6,19 +6,22 @@ using UnityEngine;
 public class PlayerDetector : MonoBehaviour
 {
     [SerializeField] private int playerMask;
+    [SerializeField] private int wallMask;
     [SerializeField] private float maxDistance = 5f;
     [SerializeField] private float sphereRadius;
     //Dead zone will be seriallized for now until we can figure out this error.
     [SerializeField] private SphereCollider _deadZone;
     public bool PlayerInRange => _detectedPlayer != null;
 
-    [HideInInspector] public Controller _detectedPlayer;
+     public Controller _detectedPlayer;
 
     private MonsterShake causeShake;
     public float camIntensity;
     public float camTimer;
 
     private float currentHitDistance;
+    public AudioSource source;
+    public AudioClip clip;
 
     Vector3 origin;
     Vector3 direction;
@@ -37,6 +40,7 @@ public class PlayerDetector : MonoBehaviour
     private void FindingPlayer()
     {
         int playerMaskProcessed = 1 << playerMask;
+        int wallMaskProcessed = ~(1 << wallMask);
 
         origin = transform.position;
          direction = transform.forward;
@@ -44,25 +48,33 @@ public class PlayerDetector : MonoBehaviour
 
 
         RaycastHit hit;
-        //if(Physics.Raycast(origin, direction, out hit, maxDistance, playerMaskProcessed))
-        //{
-        //    _detectedPlayer = hit.collider.GetComponent<Controller>();
+        if (Physics.Raycast(origin, direction, out hit, maxDistance, wallMaskProcessed))
+        {
+            Debug.Log("Ignore Wall");
+            if (Physics.Raycast(origin, direction, out hit, maxDistance, playerMaskProcessed))
+            {
+                _detectedPlayer = hit.collider.GetComponent<Controller>();
 
-        //}
-       
-        if (Physics.SphereCast(origin, sphereRadius, direction, out hit, maxDistance, playerMaskProcessed))
-        {
-            _detectedPlayer = hit.collider.GetComponent<Controller>();
-            currentHitDistance = hit.distance;
+            }
         }
-        else
+        if (Physics.SphereCast(origin, sphereRadius, direction, out hit, maxDistance, wallMaskProcessed))
         {
-           // _detectedPlayer = null;
-            currentHitDistance = maxDistance;
+            if (Physics.SphereCast(origin, sphereRadius, direction, out hit, maxDistance, playerMaskProcessed))
+            {
+                _detectedPlayer = hit.collider.GetComponent<Controller>();
+                currentHitDistance = hit.distance;
+            }
+            else
+            {
+                // _detectedPlayer = null;
+                currentHitDistance = maxDistance;
+            }
         }
-        
-        if(_detectedPlayer != null)
+
+
+        if (_detectedPlayer != null)
         {
+            source.PlayOneShot(clip, 0.7f);
             causeShake.camShake(camIntensity, camTimer);
             Debug.Log("Shake");
         }

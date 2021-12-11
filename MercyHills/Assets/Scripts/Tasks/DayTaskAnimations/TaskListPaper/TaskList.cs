@@ -2,16 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
 public class TaskList : MonoBehaviour
 {
     Animator animText;
 
     public Text tasksText;
 
+
     public bool check = true;
+    [SerializeField] private PauseMenu pause;
 
     public float timer = 2f;
+
 
 
 
@@ -20,29 +22,37 @@ public class TaskList : MonoBehaviour
     {
 
         animText = GetComponent<Animator>();
+        check = false;
+        pause = FindObjectOfType<PauseMenu>();
     }
 
     private void Update()
     {
-        if (check)
+        ActivatingUIThroughBumper();
+
+
+        //timer -= Time.deltaTime;
+        //if (Input.GetButtonDown("LeftBumper"))
+        //{
+        //    check = true;
+        //    animText.SetBool("check", false);
+        //}
+
+
+
+    }
+
+    private void ActivatingUIThroughBumper()
+    {
+        if (Input.GetButtonDown("RightBumper") && check == false)
         {
-            if (Input.GetButtonDown("RightBumper"))
-            {
-                check = false;
-                animText.SetBool("check", true);
-            }       
+            check = true;
+            animText.SetBool("check", true);
         }
-
-        if (!check)
+        else if ((Input.GetButtonDown("RightBumper") && check == true))
         {
-            //timer -= Time.deltaTime;
-            if (Input.GetButtonDown("LeftBumper"))
-            {
-                check = true;
-                animText.SetBool("check", false);
-            }
-                
-
+            check = false;
+            animText.SetBool("check", false);
         }
     }
 

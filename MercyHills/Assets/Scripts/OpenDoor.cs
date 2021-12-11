@@ -11,8 +11,15 @@ public class OpenDoor : MonoBehaviour
     public GameObject buttonDescription;
     public GameObject hinge;
     public GameObject innerCross;
-    //public AudioSource doorOpening;
 
+    public AudioClip doorOpening;
+    public AudioClip doorClosing;
+    public AudioSource source;
+
+    private void Start()
+    {
+        source = GetComponent<AudioSource>();
+    }
     void Update()
     {
         //Setting distance variable to the distance from the target in the RayCasting script
@@ -47,6 +54,7 @@ public class OpenDoor : MonoBehaviour
                 buttonDescription.SetActive(false);
                 innerCross.SetActive(false);
                 hinge.GetComponent<Animation>().Play("DoorOpening");
+                source.PlayOneShot(doorOpening, 0.7f);
                 //doorOpening.Play();
 
                 StartCoroutine(timer());
@@ -67,6 +75,7 @@ public class OpenDoor : MonoBehaviour
     {
         yield return new WaitForSeconds(6);
         hinge.GetComponent<Animation>().Play("DoorClosing");
+        source.PlayOneShot(doorClosing, 0.7f);
         yield return new WaitForSeconds(2);
         this.GetComponent<BoxCollider>().enabled = true;
     }
